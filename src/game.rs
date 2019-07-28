@@ -6,6 +6,7 @@ pub struct Board {
   pub display: Vec<Vec<&'static str>>,
   width: usize,
   height: usize,
+  mine_count: usize
 }
 
 impl Board {
@@ -52,6 +53,7 @@ impl Board {
       display: vec![vec![" "; width]; height],
       width,
       height,
+      mine_count
     };
   }
 
@@ -61,7 +63,7 @@ impl Board {
         "0" => self.reveal_blank(x, y),
         "B" => {
           self.print_all();
-          println!("Game Over!");
+          println!("{}", "Game Over!".red());
           use std::process;
           process::exit(256);
         },
@@ -69,6 +71,7 @@ impl Board {
           self.display[y][x] = self.field[y][x];
         }
       }
+      self.win_check();
     } else {
       self.print();
       println!("{}", "Selected position is already revealed or marked".yellow());
@@ -122,6 +125,24 @@ impl Board {
     if y >= self.display.len() { return false; }
     if x >= self.display[y].len() { return false; }
     return true;
+  }
+
+  fn win_check(&self) {
+    let mut empty_count = 0;
+    for y in 0..self.height {
+      for x in 0..self.width {
+        if self.display[y][x] == " " || (self.display[y][x] == "M" && self.field[y][x] == "B") {
+          empty_count += 1;
+        }
+      }
+    }
+    if empty_count == self.mine_count {
+      print!("{}[2J", 27 as char);
+      self.print_all();
+      println!("{}", "Congradulations! You win!".cyan());
+      use std::process;
+      process::exit(256);
+    }
   }
 
   pub fn print(&self) {

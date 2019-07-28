@@ -14,14 +14,19 @@ fn get_user_input() -> String {
 }
 
 pub fn init() -> Board {
-  println!("{}", "Please enter board WIDTH, HEIGHT, and MINE COUNT separated by whitespace".green());
+  println!("{}", "Please enter board WIDTH, HEIGHT, and MINE COUNT separated by WHITESPACE".green());
   let gui = get_user_input();
   let dimensions: Vec<&str> = gui.split_whitespace().collect();
-  let x: usize = dimensions[0].parse::<usize>().unwrap();
-  let y: usize = dimensions[1].parse::<usize>().unwrap();
-  let mc: usize = dimensions[2].parse::<usize>().unwrap();
-  clear_terminal();
-  return Board::create(x, y, mc);
+  if dimensions.len() == 3 {
+    let x = dimensions[0].parse().unwrap();
+    let y = dimensions[1].parse().unwrap();
+    let mc = dimensions[2].parse().unwrap();
+    clear_terminal();
+    return Board::create(x, y, mc);
+  } else {
+    println!("{}", "Please enter the right amount of values".yellow());
+    return init();
+  }
 }
 
 pub fn get_command(board: &mut Board) {
