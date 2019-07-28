@@ -1,0 +1,9 @@
+[package]
+name = "minesweeper"
+version = "0.1.0"
+authors = ["Michael McCarthy <thmichael300@gmail.com>"]
+edition = "2018"
+
+[dependencies]
+rand  = "0.7.0"
+colored = "1.8"
